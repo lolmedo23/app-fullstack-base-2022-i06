@@ -24,11 +24,14 @@ class Main implements EventListenerObject, ResponseLister {
             let resputaString: string = response;
             let resputa: Array<Device> = JSON.parse(resputaString);
             let cajaDiv = document.getElementById("caja");
-            let datosVisuale = `<div class="collection">`
+            let datosVisuale = `<ul class="collection">`
             for (let disp of resputa) {
-                datosVisuale+= `<a href="#!" class="collection-item">${disp.name} - ${disp.description}</a>`
+                datosVisuale += `<li class="collection-item avatar">
+                <i class="material-icons circle">folder</i>
+                <p>${disp.name} <br> ${disp.description}</p>
+                <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a></li>`;
             }
-            datosVisuale += `</div>`
+            datosVisuale += `</ul>`
             cajaDiv.innerHTML = datosVisuale;
           } else {
               alert("Algo salio mal")
