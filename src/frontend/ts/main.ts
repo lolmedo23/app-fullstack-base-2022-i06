@@ -1,5 +1,5 @@
 
-
+declare const M;
 class Main implements EventListenerObject, ResponseLister {
     public listaPersonas: Array<Persona> = new Array();
     public etidadesAcciones: Array<Acciones> = new Array();
@@ -28,18 +28,44 @@ class Main implements EventListenerObject, ResponseLister {
             for (let disp of resputa) {
                 datosVisuale += `<li class="collection-item avatar">
                 <i class="material-icons circle">folder</i>
-                <p>${disp.name} <br> ${disp.description}</p>
-                <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a></li>`;
+                <span class="title nombreDisp">${disp.name}</span>
+                <p> ${disp.description}</p>
+                <a href="#!" class="secondary-content"> 
+                <div class="switch">
+                  <label>
+                    Off
+                    <input type="checkbox" id="cb_${disp.id}">
+                    <span class="lever"></span>
+                    On
+                  </label>
+                </div></a>
+                </li>`;
             }
             datosVisuale += `</ul>`
             cajaDiv.innerHTML = datosVisuale;
+
+            for (let disp of resputa) {
+                let checkbox = document.getElementById("cb_"+ disp.id)
+                checkbox.addEventListener("click", this)
+            }
+
           } else {
               alert("Algo salio mal")
           }
     }
+
+    public handlerResponseActualizar(status: number, response: string) {
+        if (status == 200) {            
+              console.log("post correcto")
+          }
+    }
     public handleEvent(e:Event): void {
         let objetoEvento = <HTMLInputElement>e.target;
-        if (e.type == "click") {
+        if (e.type == "click" && objetoEvento.id.startsWith("cb_")){
+            console.log("se hizo click para prender o apagar")
+            let datos = {"id":objetoEvento.id.substring(3), "state": objetoEvento.checked}
+            this.framework.ejecutarRequest("POST", "http://localhost:8000/actualizar", this, datos);
+        }else if (e.type == "click") {
             alert("Hola " +  this.listaPersonas[0].nombre +" "+objetoEvento.id);    
         } else {
             alert("se hizo doble click en el titulo")
@@ -50,6 +76,8 @@ class Main implements EventListenerObject, ResponseLister {
 
 
 window.addEventListener("load", ()=> {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems, "");
     let btn = document.getElementById("btnSaludar");
     let btn2 = document.getElementById("btnDoble");
     let main: Main = new Main();
