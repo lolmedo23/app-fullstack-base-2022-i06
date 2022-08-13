@@ -15,15 +15,17 @@ var devices = require('./datos.json')
 //=======[ Main module code ]==================================================
 app.post('/actualizar', function(req,res){
     console.log("Llegue al servidor");
-    console.log(req.body);
-    //Validar los datos que llegan id!=undefined y state!= undefined
-
-//Buscar en la base de datos
+        for (var i = 0; i < devices.length; i++) {        
+            if(devices[i].id == req.body.id){
+                console.log("guardar estado")
+                devices[i].state=req.body.state
+            }
+        }
     res.send("llego")
 });
 
 app.get('/devices/', function(req, res, next) {
-    console.log("Alguien pidio divices!");
+    console.log("Alguien pidio devices!");
     setTimeout(function(){
         res.send(JSON.stringify(devices)).status(200);
     }, 2000);
