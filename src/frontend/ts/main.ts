@@ -84,10 +84,7 @@ window.addEventListener("load", ()=> {
     main.nombre = "Matias"
  
     btn2.addEventListener("dblclick", main);
-    btn.addEventListener("click", main);
-    
-
-  
+    btn.addEventListener("click", main);      
     
 });
 

@@ -13,46 +13,32 @@ app.use(express.static('/home/node/app/static/'));
 
 var devices = require('./datos.json')
 //=======[ Main module code ]==================================================
-/*devices = [
-    { 
-        'id': 1, 
-        'name': 'Lampara 1', 
-        'description': 'Luz living', 
-        'state': 1, 
-        'type': 1, 
-    },
-    { 
-        'id': 2, 
-        'name': 'Ventilador 1', 
-        'description': 'Ventilador Habitacion', 
-        'state': 1, 
-        'type': 2, 
-    },
-];
-*/
-
 app.post('/actualizar', function(req,res){
     console.log("Llegue al servidor");
     console.log(req.body);
     //Validar los datos que llegan id!=undefined y state!= undefined
+
 //Buscar en la base de datos
     res.send("llego")
 });
 
 app.get('/devices/', function(req, res, next) {
-
     console.log("Alguien pidio divices!");
     setTimeout(function(){
         res.send(JSON.stringify(devices)).status(200);
     }, 2000);
-    
 });
 
 app.get('/devices/:id', function(req, res) {
-    //ACA validar los parametros de entrada, y buscar el id en el json
     console.log("Alguien pidio un dispositivo con el id: "+ req.param('id'));
+    var deviceSolicitado
+    for (var i = 0; i < devices.length; i++) {        
+        if(req.param('id')==devices[i].id){
+            deviceSolicitado=devices[i]
+        }
+    }
     setTimeout(function(){
-        res.send(JSON.stringify(devices)).status(200);
+        res.send(JSON.stringify(deviceSolicitado)).status(200);
     }, 2000);
     
 });
