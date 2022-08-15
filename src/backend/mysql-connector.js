@@ -20,6 +20,52 @@ connection.connect(function(err) {
     console.log('Connected to DB under thread ID: ' + connection.threadId);
 });
 
-module.exports = connection;
+function readDevices(connection, callback){
+    connection.query('SELECT * FROM Devices', function(err, result) {
+        if(err) throw err;
+        callback(result);
+    });
+}
+
+function insertDevice(connection, data, callback){
+    let insertQuery = 
+    "INSERT INTO Devices (id, name,description,state,type) VALUES (?,?,?,?,?)";
+    let query = mysql.format(insertQuery,[data.id, data.name, data.description, data.state, data.type]);
+    connection.query(query, function(err, result){
+        if (err) throw err;
+        callback(result);
+    });
+}
+
+function updateState(connection, data, callback){
+    let updateQuery = "UPDATE Devices SET state = ? WHERE id = ?"
+    let query = mysql.format(updateQuery, [data.state,data.id ]);
+    connection.query(query, function(err, result){
+        if (err) throw err;
+        callback(result);
+    });
+}
+
+function updateDescription(connection, data, callback){
+    let updateQuery = "UPDATE Devices SET description = ? WHERE id = ?"
+    let query = mysql.format(updateQuery, [data.description,data.id ]);
+    connection.query(query, function(err, result){
+        if (err) throw err;
+        callback(result);
+    });
+}
+
+function removeDevice(connection, data, callback){
+    let removeQuery = "DELETE FROM Devices WHERE id = ?"
+    let query = mysql.format(removeQuery, [data.id]);
+    connection.query(query, function(err, result){
+        if (err) throw err;
+        callback(result);
+    });
+}
+
+module.exports = {connection, readDevices, insertDevice, updateState, updateDescription, removeDevice};
+
+
 
 //=======[ End of file ]=======================================================
