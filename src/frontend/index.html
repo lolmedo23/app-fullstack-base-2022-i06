@@ -30,9 +30,57 @@
                 <br/>
                 <h3 id="btnDoble">Smart Home Web Client!</h3>
                 <br/>
-                <div id="caja" style="background-color: red;"> 
-             
+
+                <!-- Modal Trigger Add Device -->
+                <a class="waves-effect waves-light btn modal-trigger" href="#modalNewDevice">Add Device</a>
+                <!-- Modal Structure -->
+                <div id="modalNewDevice" class="modal">
+                    <div class="row">
+                        <form class="col s12">
+                            <h4>New Device</h4>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                  <input id="inputNewNameDevice" placeholder="Insert Name Device" type="text" class="validate">
+                                  <label for="Name Device">Name Device</label>
+                                </div>
+                                <div class="input-field col s6">
+                                  <input id="inputNewDescription" placeholder="Insert Description" type="text" class="validate">
+                                  <label for="Description">Description</label>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col l1 m1 s1"></div>
+                                    <div class="input-field col l4 m4 s4">
+                                        <select id="selectedTypeNewDevice">
+                                          <option value="" disabled selected>Choose your option</option>
+                                          <option value="0">Luz </option>
+                                          <option value="1">Persiana</option>                                          
+                                        </select>
+                                        <label>Materialize Multiple Select</label>
+                                    </div>
+                                    <div class="input-field col l3 m3 s3"></div>
+                                    <div class="input-field col l3 m3 s3">
+                                        <div class="switch">
+                                            <label>
+                                            Off
+                                            <input id="checkboxNewDevice" type="checkbox" id="newDevice">
+                                            <span class="lever"></span>
+                                            On
+                                            </label>
+                                        </div>
+                                    </div>                                   
+                                  </div>    
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="modal-footer">
+                    <a id="saveNewDevice" href="#!" class="btn modal-close waves-effect waves-green btn-flat">SAVE</a>
+                    <a href="#!" class="btn modal-close waves-effect waves-green btn-flat">CANCEL</a>
+                    </div>
                 </div>
+
+                <div id="caja" style="background-color: red;"> 
+
                 <div class="row">
                     <div class="input-field col s12 m12 l12 xl12">
                         <textarea id="textarea_1" class="materialize-textarea" style="height: 150px;" readonly></textarea>
@@ -76,3 +124,10 @@
 
     </body>
   </html>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems);
+    });
+  </script>

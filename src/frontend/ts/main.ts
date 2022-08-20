@@ -13,7 +13,6 @@ class Main implements EventListenerObject, ResponseLister {
         this.listaPersonas.push(new Persona("S", 12));
         this.etidadesAcciones.push(new Usuario("Juan", 12, "jPerez"));
         this.etidadesAcciones.push(new Administrador("Juan", 12));
-
         
     }
 
@@ -23,38 +22,46 @@ class Main implements EventListenerObject, ResponseLister {
             let resputa: Array<Device> = JSON.parse(resputaString);
             let cajaDiv = document.getElementById("caja");
 
-
+            
             let datosVisuale:string = `<ul class="collection">`
             for (let disp of resputa) {
                 datosVisuale += ` <li class="collection-item avatar">`;
-                if (disp.type == 1) {
+                if (disp.type == 0) {
                     datosVisuale += `<img src="../static/images/lightbulb.png" alt="" class="circle">`;
-                } else if (disp.type == 2) {
+                } else if (disp.type == 1) {
                     datosVisuale += `<img src="../static/images/window.png" alt="" class="circle">`;
                 }
                 
-                datosVisuale += `<span class="title nombreDisp">${disp.name}</span>
-                <p>${disp.description}
-                </p>
+                datosVisuale += `
+                <span class="title nombreDisp">${disp.name}</span>
+                <p>${disp.description}</p>
+                <div class="input-field col l1 m1 s1"></div>                
 
-                <a href="#!" class="secondary-content">
-                <div class="switch">
-                <label>
-                  Off
-                  <input type="checkbox" id="cb_${disp.id}">
-                  <span class="lever"></span>
-                  On
-                </label>
-              </div>
-                </a>
+                <button id="btndel_${disp.id}" class="btn-floating waves-effect waves-light green"><i class="material-icons">delete</i></button>
+                <div class="row">
+                    <a href="#!" class="secondary-content">
+                        <div class="switch" col l3 m3 s3>
+                            <label>
+                            Off
+                            <input type="checkbox" id="cb_${disp.id}">
+                            <span class="lever"></span>
+                            On
+                            </label>
+                    </div>                                  
+                    </a>
+                </div>    
+                    
               </li>`
             }
             datosVisuale += `</ul>`
             cajaDiv.innerHTML = datosVisuale;
 
             for (let disp of resputa) {
-                let checkbox = document.getElementById("cb_" + disp.id);
+                let checkbox = <HTMLInputElement>document.getElementById("cb_" + disp.id);
+                checkbox.checked = disp.state;           
                 checkbox.addEventListener("click",this)
+                let btn =  <HTMLElement>document.getElementById("btndel_" + disp.id);
+                btn.addEventListener("click",this)
             }
         
           } else {
@@ -63,27 +70,38 @@ class Main implements EventListenerObject, ResponseLister {
     }
     handlerResponseActualizar(status: number, response: string) {
         if (status == 200) {
-            alert("Se acutlizo correctamente")    
+            this.framework.ejecutarRequest("GET", "http://localhost:8000/devices", this) 
+            alert("Se actualizo correctamente")               
         } else {
-            alert("Error")    
+            alert(response)    
         }
         
     }
+
     public handleEvent(e:Event): void {
         let objetoEvento = <HTMLInputElement>e.target;
-      
-        if (e.type == "click" && objetoEvento.id.startsWith("cb_")) {
+        let objetoBtn = <HTMLElement>e.target;
 
-          //  console.log(objetoEvento.id,)
+        if (e.type == "click" && objetoEvento.id.startsWith("cb_")) {
             console.log("Se hizo click para prender o apagar")
             let datos = { "id": objetoEvento.id.substring(3), "state": objetoEvento.checked };
-            this.framework.ejecutarRequest("POST","http://localhost:8000/actualizar", this,datos)
-            
-        }else if (e.type == "click") {
-      
-            
+            this.framework.ejecutarRequest("POST","http://localhost:8000/actualizar", this,datos)            
+        }else if (e.type == "click" && objetoBtn.parentElement.id.startsWith("btndel_")) {
+            let datos = {"id": objetoBtn.parentElement.id.substring(7)}
+            this.framework.ejecutarRequest("POST","http://localhost:8000/removeDevice", this,datos)
+        }else if (e.type == "click" && (objetoBtn.id == "saveNewDevice")) {                  
+            let name = <HTMLInputElement>document.getElementById("inputNewNameDevice")
+            let description = <HTMLInputElement>document.getElementById("inputNewDescription")
+            let type = <HTMLInputElement>document.getElementById("selectedTypeNewDevice")
+            let state = <HTMLInputElement>document.getElementById("checkboxNewDevice")
+            console.log("saveNewDevice: " + name.value +" "+ description.value+ " "+ type.value + " " + state.checked )             
+            let datos = {"name": name.value, "description": description.value, "type": type.value, "state": state.checked}
+            if(datos.name != "" && datos.description != "" && datos.state != undefined && datos.type != ""){
+                this.framework.ejecutarRequest("POST","http://localhost:8000/insertDevice", this,datos)
+            }
+        }else if (e.type == "click"){
             alert("Hola " +  this.listaPersonas[0].nombre +" ");    
-        } else {
+        }else {
             alert("se hizo doble click en el titulo")
         }
     }
@@ -95,12 +113,15 @@ window.addEventListener("load", () => {
 
     let btn = document.getElementById("btnSaludar");
     let btn2 = document.getElementById("btnDoble");
+    let btnSaveNewDevice = document.getElementById("saveNewDevice");
+    let modalNewDevice = document.getElementById("modalNewDevice");
+
     let main: Main = new Main();
     main.nombre = "Matias"
 
     btn2.addEventListener("dblclick", main);
     btn.addEventListener("click", main);
-
+    btnSaveNewDevice.addEventListener("click", main);
 });
 
 

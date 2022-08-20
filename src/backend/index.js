@@ -4,16 +4,12 @@ var PORT    = 3000;
 
 var express = require('express');
 var app     = express();
-var utils   = require('./mysql-connector');
-const {readDevices, insertDevice, updateState, updateDescription, removeDevice} = require("./mysql-connector")
+const {connection, readDevices, readDeviceID, insertDevice, updateState, removeDevice} = require("./mysql-connector")
 
 // to parse application/json
 app.use(express.json()); 
 // to serve static files
 app.use(express.static('/home/node/app/static/'));
-
-
-var connection = utils.connection
 
 
 //=======[ Main module code ]==================================================
@@ -36,29 +32,38 @@ app.get('/devices/', function(req, res) {
         });
 });
 
-app.get('/insertDevice', (req,res)=>{
-    insertDevice(connection, { name:req.body.name ,description:req.body.description,state:req.body.state,type:req.body.type},
-    (result)=>{
-        res.json(result);
-    });
+//Obtener un dispositivo de la base de datos con el id indicado
+app.get('/deviceId/', function(req, res) {
+    if(req.body.id!=undefined){
+        readDeviceID(connection, {id: req.body.id},
+        (result)=>{
+            res.json(result);
+        });
+    }else{
+        res.status(400).send("Error parametros invalidos")
+    }    
 });
 
-app.get('/updateDescription', (req,res)=>{
-    updateDescription(connection, {id: req.body.id, description:req.body.description},
-    (result)=>{
-        res.json(result);
-    });
+app.post('/insertDevice', (req,res)=>{
+    if(req.body.name!=undefined && req.body.description!=undefined && req.body.state!=undefined && req.body.type!=undefined){
+        insertDevice(connection, {name:req.body.name, description:req.body.description, state:req.body.state, type:req.body.type},
+        (result)=>{
+            res.json(result);
+        });
+    }else{
+        res.status(400).send("Error parametros invalidos")
+    }
 });
 
 //eliminar el dispositivo con id recibido por parametro
-app.get("/removeDevice", (req,res)=>{
-    console.log("/removeDevice")
+app.post("/removeDevice", (req,res)=>{
     if(req.body.id!=undefined){
-        console.log("remove Device: "+ req.body.id)
         removeDevice(connection, {id:req.body.id},
         (result)=>{
             res.json(result);
         });
+    }else{
+        res.status(400).send("Error parametros invalidos")
     }
 });
 
