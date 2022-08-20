@@ -158,39 +158,62 @@ En esta sección podés ver los detalles específicos de funcionamiento del cód
 
 ### Agregar un dispositivo
 
-Completá los pasos para agregar un dispositivo desde el cliente web.
-
 ### Frontend
 
-Completá todos los detalles sobre cómo armaste el frontend, sus interacciones, etc.
+Para Agregar un dispositivo nuevo, se debe presionar en el botón “ADD DEVICE”
+
+![architecture](doc/UI_AddDevice.png)
+
+Al presionar se abre un modal donde se debe ingresar los datos, Nombre, descripcion, Tipo y si esta encendido o apagado
+
+![architecture](doc/UI_ModalNewDevice.png)
+
+Una vez llenos los datos, presionar Save para crear y guardar el nuevo dispositivo o cancel para cancelar. 
+Al aceptar, si se creo correctamente el dispositivo, se recarga la pagina con la lista nueva de dispositivos y aparece un alert indicando que se actualizo correctamente.
+
+![architecture](doc/UI_AgregoNuevoDispositivo.png)
+
+Para eliminar un dispositivo es necesario ir al dispositivo que se desea Eliminar y presionar el botón  de eliminar .
+
+![architecture](doc/UI_BotonBorrar.png)
+
+Una vez eliminado la pagina indica que se actualizo correctamente y recarga la lista de dispositivos nueva. 
+
+![architecture](doc/UI_ActualizacionCorrecta.png)
+
+Para actualizar el estado de un dispositivo, es necesario ir al recuadro del dispositivo que se desea modificar el estado y hacer click sobre el switch de ese dispositivo. 
+
+![architecture](doc/UI_SwitchStatus.png)
+
+La pagina también indicara si se actualizo correctamente.
 
 ### Backend
 
-Completá todos los detalles de funcionamiento sobre el backend, sus interacciones con el cliente web, la base de datos, etc.
+En el backend se implemento Api para obtener los dispositivos, obtener un dispositivo, actualizar estado, insertat un dispositivo nuevo, eliminar un dispositivo y actualizar todos los campos de un dispositivo. 
+A continuacion se muestra como generar en postman la consulta al backend. 
+Obtener Dispositivos:
 
-<details><summary><b>Ver los endpoints disponibles</b></summary><br>
+![architecture](doc/Back_GetDevices.png)
 
-Completá todos los endpoints del backend con los metodos disponibles, los headers y body que recibe, lo que devuelve, ejemplos, etc.
+Obtener un Dispositivo pasando el Id
 
-1) Devolver el estado de los dispositivos.
+![architecture](doc/Back_GetDeviceId.png)
 
-```json
-{
-    "method": "get",
-    "request_headers": "application/json",
-    "request_body": "",
-    "response_code": 200,
-    "request_body": {
-        "devices": [
-            {
-                "id": 1,
-                "status": true,
-                "description": "Kitchen light"
-            }
-        ]
-    },
-}
-``` 
+Actualizar el estado de un dispositivo, con el id y el valor del estado a actualizar.
+
+![architecture](doc/Back_ActualizarState.png)
+
+Insertar un dispositivo nuevo.
+
+![architecture](doc/Back_InsertDevice.png)
+
+Eliminar un dispositivo.
+
+![architecture](doc/Back_RemoveDevice.png)
+
+Actualizar todos los campos de un dispositivo.
+
+![architecture](doc/Back_UpdateDevice.png)
 
 </details>
 

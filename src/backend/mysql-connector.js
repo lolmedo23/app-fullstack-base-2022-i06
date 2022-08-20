@@ -56,6 +56,15 @@ function updateState(connection, data, callback){
     });
 }
 
+function updateDevice(connection, data, callback){
+    let updateQuery = "UPDATE Devices SET name = ?, description = ?,state = ?,type = ? WHERE id = ?"
+    let query = mysql.format(updateQuery, [data.name, data.description, data.state, data.type, data.id ]);
+    connection.query(query, function(err, result){
+        if (err) throw err;
+        callback(result);
+    });
+}
+
 function removeDevice(connection, data, callback){
     let removeQuery = "DELETE FROM Devices WHERE id = ?"
     let query = mysql.format(removeQuery, [data.id]);
@@ -65,7 +74,7 @@ function removeDevice(connection, data, callback){
     });
 }
 
-module.exports = {connection, readDevices, readDeviceID, insertDevice, updateState, removeDevice};
+module.exports = {connection, readDevices, readDeviceID, insertDevice, updateState, updateDevice, removeDevice};
 
 
 

@@ -4,7 +4,7 @@ var PORT    = 3000;
 
 var express = require('express');
 var app     = express();
-const {connection, readDevices, readDeviceID, insertDevice, updateState, removeDevice} = require("./mysql-connector")
+const {connection, readDevices, readDeviceID, insertDevice, updateState, updateDevice, removeDevice} = require("./mysql-connector")
 
 // to parse application/json
 app.use(express.json()); 
@@ -35,6 +35,7 @@ app.get('/devices/', function(req, res) {
 //Obtener un dispositivo de la base de datos con el id indicado
 app.get('/deviceId/', function(req, res) {
     if(req.body.id!=undefined){
+        console.log(req.body.id)
         readDeviceID(connection, {id: req.body.id},
         (result)=>{
             res.json(result);
@@ -59,6 +60,17 @@ app.post('/insertDevice', (req,res)=>{
 app.post("/removeDevice", (req,res)=>{
     if(req.body.id!=undefined){
         removeDevice(connection, {id:req.body.id},
+        (result)=>{
+            res.json(result);
+        });
+    }else{
+        res.status(400).send("Error parametros invalidos")
+    }
+});
+
+app.post('/updateDevice', (req,res)=>{
+    if(req.body.id!=undefined && req.body.name!=undefined && req.body.description!=undefined && req.body.state!=undefined && req.body.type!=undefined){
+        updateDevice(connection, {id:req.body.id, name:req.body.name, description:req.body.description, state:req.body.state, type:req.body.type},
         (result)=>{
             res.json(result);
         });
